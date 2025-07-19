@@ -81,13 +81,20 @@ const AuthForm = ({ type }: { type: FormType }) => {
           return;
         }
 
-        await signIn({
-          email,
-          idToken,
+        // Call the API route to set the session cookie
+        const res = await fetch("/api/sign-in", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, idToken }),
         });
+        const result = await res.json();
+        if (!result.success) {
+          toast.error(result.message || "Sign in failed");
+          return;
+        }
 
         toast.success("Signed in successfully.");
-        router.push("/");
+        window.location.href = "/";
       }
     } catch (error) {
       console.log(error);

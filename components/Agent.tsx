@@ -117,27 +117,13 @@ const Agent = ({
   const handleCall = async () => {
     setCallStatus(CallStatus.CONNECTING);
 
-    if (type === "generate") {
-      await vapi.start(process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!, {
-        variableValues: {
-          username: userName,
-          userid: userId,
-        },
-      });
-    } else {
-      let formattedQuestions = "";
-      if (questions) {
-        formattedQuestions = questions
-          .map((question) => `- ${question}`)
-          .join("\n");
-      }
-
-      await vapi.start(interviewer, {
-        variableValues: {
-          questions: formattedQuestions,
-        },
-      });
-    }
+    // New Vapi Assistant-based config (no workflowId)
+    const assistant = (vapi as any).createAssistant({
+      name: "AI Interviewer",
+      firstMessage: "Welcome to your mock interview!",
+      voice: "shimmer", // or any Vapi voice
+    });
+    vapi.start(assistant);
   };
 
   const handleDisconnect = () => {

@@ -71,6 +71,7 @@ export async function signIn(params: SignInParams) {
   const { email, idToken } = params;
 
   try {
+    console.log("Looking up user:", email); // Debug log
     const userRecord = await auth.getUserByEmail(email);
     if (!userRecord)
       return {
@@ -79,9 +80,9 @@ export async function signIn(params: SignInParams) {
       };
 
     await setSessionCookie(idToken);
+    return { success: true };
   } catch (error: any) {
-    console.log("");
-
+    console.error("SIGNIN ERROR:", error); // Debug log
     return {
       success: false,
       message: "Failed to log into account. Please try again.",
@@ -92,20 +93,17 @@ export async function signIn(params: SignInParams) {
 // Sign out user by clearing the session cookie
 export async function signOut() {
   const cookieStore = await cookies();
-
   cookieStore.delete("session");
 }
 
 // Get current user from session cookie
 export async function getCurrentUser(): Promise<User | null> {
   const cookieStore = await cookies();
-
   const sessionCookie = cookieStore.get("session")?.value;
   if (!sessionCookie) return null;
 
   try {
     const decodedClaims = await auth.verifySessionCookie(sessionCookie, true);
-
     // get user info from db
     const userRecord = await db
       .collection("users")
@@ -119,7 +117,6 @@ export async function getCurrentUser(): Promise<User | null> {
     } as User;
   } catch (error) {
     console.log(error);
-
     // Invalid or expired session
     return null;
   }

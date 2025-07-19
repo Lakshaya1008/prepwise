@@ -704,6 +704,51 @@ export const dummyInterviews: Interview[] = [
 
 </details>
 
+# Vapi AI Integration (July 2025)
+
+## Environment Variables
+
+Add the following to your `.env.local` (and `.env.example`):
+
+```
+NEXT_PUBLIC_VAPI_WEB_TOKEN=your-vapi-web-token
+```
+
+## Vercel Deployment
+
+Ensure your `vercel.json` includes:
+
+```
+{
+  "env": {
+    "NEXT_PUBLIC_VAPI_WEB_TOKEN": "your-web-token-here"
+  }
+}
+```
+
+## Health Check Endpoint
+
+A health check endpoint is available at `/api/health`.
+- Returns `{ vapi: "ok" }` if the token is present
+- Returns `{ vapi: "missing-token" }` if not
+
+## Usage
+
+- Vapi is initialized in `lib/vapi.sdk.ts`:
+  ```ts
+  import Vapi from "@vapi-ai/web";
+  export const vapi = new Vapi(process.env.NEXT_PUBLIC_VAPI_WEB_TOKEN!);
+  ```
+- Use `vapi.createAssistant` and `vapi.start(assistant)` in client components (see `Agent.tsx`).
+- No workflow ID is required.
+
+## Voice Mode
+
+- Voice mode works live on `localhost:3000` and in production with the correct token.
+
+---
+
+For any further setup or troubleshooting, see the official Vapi documentation or contact the maintainer.
 
 ## <a name="links">🔗 Assets</a>
 

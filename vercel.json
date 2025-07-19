@@ -1,0 +1,5 @@
+{
+  "env": {
+    "NEXT_PUBLIC_VAPI_WEB_TOKEN": "your-web-token-here"
+  }
+} 
