@@ -118,12 +118,11 @@ const Agent = ({
     setCallStatus(CallStatus.CONNECTING);
 
     // New Vapi Assistant-based config (no workflowId)
-    const assistant = (vapi as any).createAssistant({
+    vapi.start({
       name: "AI Interviewer",
       firstMessage: "Welcome to your mock interview!",
       voice: "shimmer", // or any Vapi voice
     });
-    vapi.start(assistant);
   };
 
   const handleDisconnect = () => {
